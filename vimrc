@@ -1,4 +1,3 @@
-"Vundle
 set nocompatible               " be iMproved
 filetype off                   " required!
 syntax on
@@ -16,13 +15,12 @@ Bundle 'gmarik/vundle'
 "Vundles
 Bundle "Markdown"
 Bundle "https://github.com/vim-ruby/vim-ruby.git"
-"Bundle "Command-T"
 Bundle 'kien/ctrlp.vim'
 let g:CommandTMatchWindowAtTop=1 " show window at top
 Bundle "jQuery"
 Bundle "rails.vim"
 Bundle "fugitive.vim"
-Bundle "tComment"
+Bundle "commentary.vim"
 nnoremap // :TComment<CR>
 vnoremap // :TComment<CR>
 Bundle "ack.vim"
@@ -32,50 +30,26 @@ Bundle "SuperTab"
 Bundle 'unimpaired.vim'
 Bundle 'Solarized'
 Bundle 'VimClojure'
-"Bundle "git://github.com/Lokaltog/vim-powerline.git"
 Bundle "molokai"
 Bundle "go"
 Bundle "Go-Syntax"
-"Bundle "Railscasts-Theme-GUIand256color"
-"Bundle "Wombat"
-" " }}}
+Bundle "delimitMate"
+Bundle "surround"
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
 set directory=~/.vim/backup,/tmp
 set backupskip=/.vim/backup/*,/tmp
-set writebackup
-
+set nobackup
+set noswapfile
 set history=1000
-
 set showcmd     "show incomplete cmds down the bottom
 set showmode    "show current mode down the bottom
-
 set incsearch   "find the next match as we type the search
 set hlsearch    "hilight searches by default
-
-" make uses real tabs
-au FileType make set noexpandtab
-
-" Go
-au BufRead,BufNewFile *.go set filetype=go
-
-"Ruby
-au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
-
-" md, markdown, and mk are markdown and define buffer-local preview
-au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
-
-" add json syntax highlighting
-au BufNewFile,BufRead *.json set ft=javascript
-
-" make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
-au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
-
 set number      "add line numbers
 set showbreak=...
 set wrap linebreak nolist
-
 set tabstop=4		                " tab stops
 set softtabstop=2
 set shiftwidth=2	                " number of spaces to use for each step of (auto)indent
@@ -85,6 +59,36 @@ set smartindent
 set expandtab
 set smarttab
 set backspace=indent,eol,start
+" Tab completion
+set wildmode=list:longest,list:full
+set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+set wildignore+=**/vendor/plugins/**,**/vendor/gems/**,**/temp/**,**/tmp/**
+"Font
+set guifont=Monaco:h14
+"disable visual bell
+set visualbell t_vb=
+"some stuff to get the mouse going in term
+set mouse=a
+set ttymouse=xterm2
+"hide buffers when not displayed
+set hidden
+" Completion
+" imap <Tab> <C-P>
+set complete=.,b,u,]
+set wildmode=longest,list:longest
+set completeopt=menu,preview
+" Display extra whitespace
+set list listchars=tab:»·,trail:·
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*,*.so,*.swp,*.zip
+" make searches case-sensitive only if they contain upper-case characters
+set ignorecase smartcase
+set shell=bash
+set cmdheight=1
+
+" Use Ack instead of Grep when available
+if executable("ack")
+  set grepprg=ack\ -H\ --nogroup\ --nocolor
+endif
 
 " Status Line
 if has("statusline") && !&cp
@@ -110,53 +114,67 @@ if has("statusline") && !&cp
   set statusline=%<\ %n:%f\ %m%r%y%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
 endif
 
-" Tab completion
-set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
-set wildignore+=**/vendor/plugins/**,**/vendor/gems/**,**/temp/**,**/tmp/**
-
 filetype plugin indent on
 
-"Font
-set guifont=Monaco:h14
+" Clear the search buffer when hitting return
+function! MapCR()
+  nnoremap <cr> :nohlsearch<cr>
+endfunction
+call MapCR()
 
-"disable visual bell
-set visualbell t_vb=
+" make uses real tabs
+au FileType make set noexpandtab
 
-"some stuff to get the mouse going in term
-set mouse=a
-set ttymouse=xterm2
+" Go
+au BufRead,BufNewFile *.go set filetype=go
 
-"hide buffers when not displayed
-set hidden
+"Ruby
+au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
+
+" md, markdown, and mk are markdown and define buffer-local preview
+au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
+
+" add json syntax highlighting
+au BufNewFile,BufRead *.json set ft=javascript
+
+" make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
+au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
+
+" clean last search results
+nnoremap <leader>lr <esc>:let @/ = ""<cr>:<esc>
+
+" W also saves
+command! W w
+
+" Q also quits
+command! Q q
 
 "key mapping for window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
-
 "key mapping for saving file
 nmap <C-s> :w<CR>
-
 "key mapping for tab navigation
 nmap <Tab> gt
 nmap <S-Tab> gT
-
 "Key mapping for textmate-like indentation
 nmap <D-[> <<
 nmap <D-]> >>
 vmap <D-[> <gv
 vmap <D-]> >gv
 
-"Command T
-"let g:CommandTAcceptSelectionMap = '<C-t>'
-"let g:CommandTAcceptSelectionTabMap = '<CR>'
-"map <D-\> :CommandT<cr>
+let mapleader = ","
 
 "# ctrlp.vim
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*,*.so,*.swp,*.zip
+let g:ctrlp_custom_ignore = {
+      \ 'dir':  '\v[\/](\.git|\.hg|\.svn|build|bin)$',
+      \ 'file': '\.class$\|\.so$\|\.db$\|\.swp$',
+      \ }
 let g:ctrlp_user_command = 'find %s -type f'
+map <C-b> :CtrlPBuffer<CR>
+":map <C-p> :CtrlPMixed<CR>
 
 if has("gui_macvim") && has("gui_running")
   map  <D-\> :CtrlP<CR>
@@ -182,19 +200,28 @@ nnoremap <F3> :set hlsearch!<CR>
 syntax enable
 let g:solarized_termcolors=256
 
-" Completion
-" imap <Tab> <C-P>
-set complete=.,b,u,]
-set wildmode=longest,list:longest
-set completeopt=menu,preview
+" Set search highlight off
+nnoremap <leader>lr <esc>:let @/ = ""<cr>:<esc>
 
-" Display extra whitespace
-set list listchars=tab:»·,trail:·
+" Delete trailing spaces
+func! DeleteTrailingWS()
+  exe "normal mz"
+  %s/\s\+$//ge
+  exe "normal `z"
+endfunc
+au BufWrite * :call DeleteTrailingWS()
 
-" Use Ack instead of Grep when available
-if executable("ack")
-  set grepprg=ack\ -H\ --nogroup\ --nocolor
-endif
+" Rename Current File
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>n :call RenameFile()<cr>
 
 if has('gui_running')
   set background=light

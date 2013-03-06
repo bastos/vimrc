@@ -31,10 +31,14 @@ Bundle 'unimpaired.vim'
 Bundle 'Solarized'
 Bundle 'VimClojure'
 Bundle "molokai"
-Bundle "go"
+Bundle "uggedal/go-vim"
 Bundle "Go-Syntax"
-Bundle "delimitMate"
-Bundle "surround"
+Bundle "Raimondi/delimitMate"
+Bundle "tpope/vim-surround"
+Bundle "Gundo"
+Bundle "majutsushi/tagbar"
+Bundle "Syntastic"
+Bundle 'airblade/vim-gitgutter'
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
@@ -89,6 +93,11 @@ set cmdheight=1
 if executable("ack")
   set grepprg=ack\ -H\ --nogroup\ --nocolor
 endif
+
+" Syntastic
+let g:syntastic_mode_map = { 'mode': 'passive',
+      \ 'active_filetypes': ['ruby', 'puppet', 'yaml', 'erlang', 'c', 'python'],
+      \ 'passive_filetypes': [] }
 
 " Status Line
 if has("statusline") && !&cp
@@ -167,6 +176,8 @@ vmap <D-]> >gv
 
 let mapleader = ","
 
+nnoremap <F5> :GundoToggle<CR>
+
 "# ctrlp.vim
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|build|bin)$',
@@ -232,3 +243,5 @@ else
   colorscheme molokai
 endif
 
+" Vimgutter
+highlight clear SignColumn

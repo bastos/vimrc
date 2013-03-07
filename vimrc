@@ -39,6 +39,7 @@ Bundle "Gundo"
 Bundle "majutsushi/tagbar"
 Bundle "Syntastic"
 Bundle 'airblade/vim-gitgutter'
+Bundle 'gcmt/psearch.vim'
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
@@ -177,6 +178,10 @@ vmap <D-]> >gv
 let mapleader = ","
 
 nnoremap <F5> :GundoToggle<CR>
+
+" PSearch
+
+map <leader>f :PSearch
 
 "# ctrlp.vim
 let g:ctrlp_custom_ignore = {

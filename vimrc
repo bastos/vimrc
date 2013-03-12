@@ -209,6 +209,10 @@ let vimclojure#ParenRainbow = 1
 let vimclojure#WantNailgun = 1
 let vimclojure#NailgunClient = "/usr/local/bin/ng"
 
+" Le wildmenu
+set wildmenu
+set wildmode=list:longest,full
+
 " Search
 " set hlsearch!
 nnoremap <F3> :set hlsearch!<CR>

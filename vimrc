@@ -37,6 +37,7 @@ Bundle "Raimondi/delimitMate"
 Bundle "tpope/vim-surround"
 Bundle "Gundo"
 Bundle "majutsushi/tagbar"
+Bundle "szw/vim-tags"
 Bundle "Syntastic"
 Bundle 'airblade/vim-gitgutter'
 Bundle 'gcmt/psearch.vim'
@@ -222,6 +223,9 @@ let g:solarized_termcolors=256
 
 " Set search highlight off
 nnoremap <leader>lr <esc>:let @/ = ""<cr>:<esc>
+
+" Tagbar
+nmap <leader><F8> :TagbarToggle<CR>
 
 " Delete trailing spaces
 func! DeleteTrailingWS()

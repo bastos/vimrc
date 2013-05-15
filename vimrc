@@ -3,6 +3,16 @@ filetype off                   " required!
 syntax on
 set laststatus=2
 set encoding=utf-8
+let mapleader = ","
+
+" http://stackoverflow.com/questions/14802689/macvim-wont-load-specific-color-scheme-by-default
+let macvim_skip_colorscheme=1
+
+" Add a bit extra margin to the left
+set foldcolumn=1
+
+" Set to auto read when a file is changed from the outside
+set autoread
 
 set rtp+=~/.vim/bundle/vundle/
 " Plugins " {{{
@@ -13,19 +23,18 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 "Vundles
-Bundle "Markdown"
+Bundle "tpope/vim-markdown"
+Bundle "tpope/vim-repeat"
+Bundle "tpope/vim-dispatch"
+Bundle "terryma/vim-multiple-cursors"
 Bundle "https://github.com/vim-ruby/vim-ruby.git"
 Bundle 'kien/ctrlp.vim'
-let g:CommandTMatchWindowAtTop=1 " show window at top
+Bundle 'godlygeek/tabular'
 Bundle "jQuery"
 Bundle "rails.vim"
 Bundle "fugitive.vim"
 Bundle "commentary.vim"
-nnoremap // :TComment<CR>
-vnoremap // :TComment<CR>
 Bundle "ack.vim"
-noremap <LocalLeader># "ayiw:Ack <C-r>a<CR>
-vnoremap <LocalLeader># "ay:Ack <C-r>a<CR>
 Bundle "SuperTab"
 Bundle 'unimpaired.vim'
 Bundle 'Solarized'
@@ -41,6 +50,11 @@ Bundle "szw/vim-tags"
 Bundle "Syntastic"
 Bundle 'airblade/vim-gitgutter'
 Bundle 'gcmt/psearch.vim'
+Bundle "scrooloose/nerdtree"
+Bundle 'jistr/vim-nerdtree-tabs'
+Bundle 'rizzatti/funcoo.vim'
+Bundle 'rizzatti/dash.vim'
+Bundle 'slim-template/vim-slim'
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
@@ -87,14 +101,29 @@ set completeopt=menu,preview
 set list listchars=tab:»·,trail:·
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/tmp/*,*.so,*.swp,*.zip
 " make searches case-sensitive only if they contain upper-case characters
-set ignorecase smartcase
-set shell=bash
+set ignorecase
+set smartcase
+set shell=zsh
 set cmdheight=1
 
 " Use Ack instead of Grep when available
 if executable("ack")
-  set grepprg=ack\ -H\ --nogroup\ --nocolor
+  "set grepprg=ack\ -H\ --nogroup\ --nocolor
+  let g:ackprg = 'ag --nogroup --nocolor --column'
 endif
+
+" Ack
+noremap <LocalLeader># "ayiw:Ack <C-r>a<CR>
+vnoremap <LocalLeader># "ay:Ack <C-r>a<CR>
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+     \ if line("'\"") > 0 && line("'\"") <= line("$") |
+     \   exe "normal! g`\"" |
+     \ endif
+
+" Remember info about open buffers on close
+set viminfo^=%
 
 " Syntastic
 let g:syntastic_mode_map = { 'mode': 'passive',
@@ -127,12 +156,6 @@ endif
 
 filetype plugin indent on
 
-" Clear the search buffer when hitting return
-function! MapCR()
-  nnoremap <cr> :nohlsearch<cr>
-endfunction
-call MapCR()
-
 " make uses real tabs
 au FileType make set noexpandtab
 
@@ -160,31 +183,58 @@ command! W w
 " Q also quits
 command! Q q
 
+" Commentary
+nnoremap // :TComment<CR>
+vnoremap // :TComment<CR>
+
 "key mapping for window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
+
 "key mapping for saving file
 nmap <C-s> :w<CR>
+
 "key mapping for tab navigation
 nmap <Tab> gt
 nmap <S-Tab> gT
+
 "Key mapping for textmate-like indentation
 nmap <D-[> <<
 nmap <D-]> >>
 vmap <D-[> <gv
 vmap <D-]> >gv
 
-let mapleader = ","
+" Save
+nmap <leader>w :w!<cr>
 
+" NerdTree
+map <leader>nn :NERDTreeToggle<cr>
+map <leader>nb :NERDTreeFromBookmark
+map <leader>nf :NERDTreeFind<cr>
+
+" Gundo
 nnoremap <F5> :GundoToggle<CR>
+
+" Nerdtree
+map <Leader>nt <plug>NERDTreeTabsToggle<CR>
 
 " PSearch
 
 map <leader>f :PSearch
 
-"# ctrlp.vim
+" CtrlP
 let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|build|bin)$',
       \ 'file': '\.class$\|\.so$\|\.db$\|\.swp$',
@@ -203,7 +253,6 @@ endif
 
 let g:ctrlp_open_new_file = 't'
 
-
 " Settings for VimClojure
 let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
@@ -219,7 +268,11 @@ set wildmode=list:longest,full
 nnoremap <F3> :set hlsearch!<CR>
 
 syntax enable
+
+" Solarized
 let g:solarized_termcolors=256
+let g:solarized_contrast="high"
+let g:solarized_visibility="high"
 
 " Set search highlight off
 nnoremap <leader>lr <esc>:let @/ = ""<cr>:<esc>
@@ -250,11 +303,46 @@ map <leader>n :call RenameFile()<cr>
 if has('gui_running')
   set background=light
   set guioptions=egmrt
+
   colorscheme Tomorrow-Bastos
 else
   set background=dark
   colorscheme molokai
 endif
+
+" Change Font size
+let s:pattern = '^\(.* \)\([1-9][0-9]*\)$'
+let s:minfontsize = 6
+let s:maxfontsize = 16
+function! AdjustFontSize(amount)
+  if has("gui_gtk2") && has("gui_running")
+    let fontname = substitute(&guifont, s:pattern, '\1', '')
+    let cursize = substitute(&guifont, s:pattern, '\2', '')
+    let newsize = cursize + a:amount
+    if (newsize >= s:minfontsize) && (newsize <= s:maxfontsize)
+      let newfont = fontname . newsize
+      let &guifont = newfont
+    endif
+:  else
+    echoerr "You need to run the GTK2 version of Vim to use this function."
+  endif
+endfunction
+
+function! LargerFont()
+  call AdjustFontSize(1)
+endfunction
+command! LargerFont call LargerFont()
+
+function! SmallerFont()
+  call AdjustFontSize(-1)
+endfunction
+command! SmallerFont call SmallerFont()
+
+" Clear the search buffer when hitting return
+function! MapCR()
+  nnoremap <cr> :nohlsearch<cr>
+endfunction
+call MapCR()
 
 " Vimgutter
 highlight clear SignColumn

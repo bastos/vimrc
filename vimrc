@@ -229,6 +229,7 @@ nnoremap <F5> :GundoToggle<CR>
 
 " Nerdtree
 map <Leader>nt <plug>NERDTreeTabsToggle<CR>
+let g:nerdtree_tabs_open_on_gui_startup = 0
 
 " PSearch
 

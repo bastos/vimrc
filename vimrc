@@ -39,7 +39,6 @@ NeoBundle "terryma/vim-multiple-cursors"
 NeoBundle "vim-ruby/vim-ruby"
 NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'godlygeek/tabular'
-NeoBundle "jQuery"
 NeoBundle "tpope/vim-fugitive"
 NeoBundle 'rking/vim-ruby-refactoring', { 'depends' : 'Spaceghost/vim-matchit'}
 NeoBundle 'tpope/vim-rails'
@@ -47,20 +46,20 @@ NeoBundle 'nelstrom/vim-textobj-rubyblock', { 'depends' : [
       \ 'kana/vim-textobj-user',
       \ 'Spaceghost/vim-matchit'
       \ ]}
-NeoBundle "ack.vim"
-NeoBundle "SuperTab"
-NeoBundle 'unimpaired.vim'
+NeoBundle "mileszs/ack.vim"
+NeoBundle "ervandew/supertab"
+NeoBundle 'tpope/vim-unimpaired'
 NeoBundle 'altercation/vim-colors-solarized'
-NeoBundle 'VimClojure'
-NeoBundle "molokai"
+NeoBundle 'vim-scripts/VimClojure'
+NeoBundle "tomasr/molokai"
 NeoBundle "uggedal/go-vim"
-NeoBundle "Go-Syntax"
+NeoBundle "jnwhiteh/vim-golang"
 NeoBundle "Raimondi/delimitMate"
 NeoBundle "tpope/vim-surround"
-NeoBundle "Gundo"
+NeoBundle "sjl/gundo.vim"
 NeoBundle "majutsushi/tagbar"
 NeoBundle "szw/vim-tags"
-NeoBundle "Syntastic"
+NeoBundle "scrooloose/syntastic"
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'gcmt/psearch.vim'
 NeoBundle "scrooloose/nerdtree"

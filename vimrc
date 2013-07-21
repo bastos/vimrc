@@ -26,18 +26,19 @@ Bundle 'gmarik/vundle'
 Bundle "tpope/vim-markdown"
 Bundle "tpope/vim-repeat"
 Bundle "tpope/vim-dispatch"
+Bundle "tpope/vim-commentary"
+Bundle "pangloss/vim-javascript"
 Bundle "terryma/vim-multiple-cursors"
-Bundle "https://github.com/vim-ruby/vim-ruby.git"
+Bundle "vim-ruby/vim-ruby"
 Bundle 'kien/ctrlp.vim'
 Bundle 'godlygeek/tabular'
 Bundle "jQuery"
 Bundle "rails.vim"
-Bundle "fugitive.vim"
-Bundle "commentary.vim"
+Bundle "tpope/vim-fugitive"
 Bundle "ack.vim"
 Bundle "SuperTab"
 Bundle 'unimpaired.vim'
-Bundle 'Solarized'
+Bundle 'altercation/vim-colors-solarized'
 Bundle 'VimClojure'
 Bundle "molokai"
 Bundle "uggedal/go-vim"
@@ -55,6 +56,8 @@ Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'rizzatti/funcoo.vim'
 Bundle 'rizzatti/dash.vim'
 Bundle 'slim-template/vim-slim'
+Bundle 'nono/vim-handlebars'
+Bundle 'bling/vim-airline'
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
@@ -84,7 +87,10 @@ set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 set wildignore+=**/vendor/plugins/**,**/vendor/gems/**,**/temp/**,**/tmp/**
 "Font
-set guifont=Monaco:h14
+
+set guifont=Monaco:h15
+"set guifont=Meslo\ LG\ L\ Regular\ for\ Powerline:h14
+
 "disable visual bell
 set visualbell t_vb=
 "some stuff to get the mouse going in term
@@ -105,6 +111,9 @@ set ignorecase
 set smartcase
 set shell=zsh
 set cmdheight=1
+
+" handlebars
+au BufRead,BufNewFile *.handlebars,*.hbs set ft=html syntax=handlebars
 
 " Use Ack instead of Grep when available
 if executable("ack")
@@ -171,6 +180,9 @@ au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
 " add json syntax highlighting
 au BufNewFile,BufRead *.json set ft=javascript
 
+" ejs files
+au BufNewFile,BufRead *.ejs set filetype=html
+
 " make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
 au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
 
@@ -219,20 +231,17 @@ vmap <D-]> >gv
 " Save
 nmap <leader>w :w!<cr>
 
-" NerdTree
-map <leader>nn :NERDTreeToggle<cr>
-map <leader>nb :NERDTreeFromBookmark
-map <leader>nf :NERDTreeFind<cr>
-
 " Gundo
 nnoremap <F5> :GundoToggle<CR>
 
 " Nerdtree
 map <Leader>nt <plug>NERDTreeTabsToggle<CR>
 let g:nerdtree_tabs_open_on_gui_startup = 0
+map <leader>nn :NERDTreeToggle<cr>
+map <leader>nb :NERDTreeFromBookmark
+map <leader>nf :NERDTreeFind<cr>
 
 " PSearch
-
 map <leader>f :PSearch
 
 " CtrlP
@@ -240,7 +249,14 @@ let g:ctrlp_custom_ignore = {
       \ 'dir':  '\v[\/](\.git|\.hg|\.svn|build|bin)$',
       \ 'file': '\.class$\|\.so$\|\.db$\|\.swp$',
       \ }
-let g:ctrlp_user_command = 'find %s -type f'
+
+let g:ctrlp_user_command = {
+    \ 'types': {
+    \ 1: ['.git', 'cd %s && git ls-files && git ls-files --others --exclude-standard | sort | uniq'],
+    \ },
+    \ 'fallback': 'find %s -type f'
+    \ }
+
 map <C-b> :CtrlPBuffer<CR>
 ":map <C-p> :CtrlPMixed<CR>
 
@@ -259,6 +275,11 @@ let vimclojure#HighlightBuiltins = 1
 let vimclojure#ParenRainbow = 1
 let vimclojure#WantNailgun = 1
 let vimclojure#NailgunClient = "/usr/local/bin/ng"
+
+" Javascript
+let g:html_indent_inctags = "html,body,head,tbody"
+let g:html_indent_script1 = "inc"
+let g:html_indent_style1 = "inc"
 
 " Le wildmenu
 set wildmenu
@@ -302,10 +323,13 @@ endfunction
 map <leader>n :call RenameFile()<cr>
 
 if has('gui_running')
-  set background=light
+  "set background=light
   set guioptions=egmrt
+  set background=light
 
-  colorscheme Tomorrow-Bastos
+  "colorscheme Tomorrow-Bastos
+  colorscheme solarized
+  let g:airline_theme='solarized'
 else
   set background=dark
   colorscheme molokai

@@ -14,50 +14,62 @@ set foldcolumn=1
 " Set to auto read when a file is changed from the outside
 set autoread
 
-set rtp+=~/.vim/bundle/vundle/
-" Plugins " {{{
-call vundle#rc()
+if has('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
 
-" let Vundle manage Vundle
-" required!
-Bundle 'gmarik/vundle'
+call neobundle#rc(expand('~/.vim/bundle/'))
 
-"Vundles
-Bundle "tpope/vim-markdown"
-Bundle "tpope/vim-repeat"
-Bundle "tpope/vim-dispatch"
-Bundle "tpope/vim-commentary"
-Bundle "pangloss/vim-javascript"
-Bundle "terryma/vim-multiple-cursors"
-Bundle "vim-ruby/vim-ruby"
-Bundle 'kien/ctrlp.vim'
-Bundle 'godlygeek/tabular'
-Bundle "jQuery"
-Bundle "rails.vim"
-Bundle "tpope/vim-fugitive"
-Bundle "ack.vim"
-Bundle "SuperTab"
-Bundle 'unimpaired.vim'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'VimClojure'
-Bundle "molokai"
-Bundle "uggedal/go-vim"
-Bundle "Go-Syntax"
-Bundle "Raimondi/delimitMate"
-Bundle "tpope/vim-surround"
-Bundle "Gundo"
-Bundle "majutsushi/tagbar"
-Bundle "szw/vim-tags"
-Bundle "Syntastic"
-Bundle 'airblade/vim-gitgutter'
-Bundle 'gcmt/psearch.vim'
-Bundle "scrooloose/nerdtree"
-Bundle 'jistr/vim-nerdtree-tabs'
-Bundle 'rizzatti/funcoo.vim'
-Bundle 'rizzatti/dash.vim'
-Bundle 'slim-template/vim-slim'
-Bundle 'nono/vim-handlebars'
-Bundle 'bling/vim-airline'
+" Let NeoBundle manage NeoBundle
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+" After install, turn shell ~/.vim/bundle/vimproc, (n,g)make -f your_machines_makefile
+NeoBundle 'Shougo/vimproc', {
+      \ 'build' : {
+      \     'mac' : 'make -f make_mac.mak',
+      \     'unix' : 'make -f make_unix.mak',
+      \    },
+      \ }
+NeoBundle "tpope/vim-markdown"
+NeoBundle "tpope/vim-repeat"
+NeoBundle "tpope/vim-dispatch"
+NeoBundle "tpope/vim-commentary"
+NeoBundle "pangloss/vim-javascript"
+NeoBundle "terryma/vim-multiple-cursors"
+NeoBundle "vim-ruby/vim-ruby"
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'godlygeek/tabular'
+NeoBundle "jQuery"
+NeoBundle "tpope/vim-fugitive"
+NeoBundle 'rking/vim-ruby-refactoring', { 'depends' : 'Spaceghost/vim-matchit'}
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'nelstrom/vim-textobj-rubyblock', { 'depends' : [
+      \ 'kana/vim-textobj-user',
+      \ 'Spaceghost/vim-matchit'
+      \ ]}
+NeoBundle "ack.vim"
+NeoBundle "SuperTab"
+NeoBundle 'unimpaired.vim'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'VimClojure'
+NeoBundle "molokai"
+NeoBundle "uggedal/go-vim"
+NeoBundle "Go-Syntax"
+NeoBundle "Raimondi/delimitMate"
+NeoBundle "tpope/vim-surround"
+NeoBundle "Gundo"
+NeoBundle "majutsushi/tagbar"
+NeoBundle "szw/vim-tags"
+NeoBundle "Syntastic"
+NeoBundle 'airblade/vim-gitgutter'
+NeoBundle 'gcmt/psearch.vim'
+NeoBundle "scrooloose/nerdtree"
+NeoBundle 'jistr/vim-nerdtree-tabs'
+NeoBundle 'rizzatti/funcoo.vim'
+NeoBundle 'rizzatti/dash.vim'
+NeoBundle 'slim-template/vim-slim'
+NeoBundle 'nono/vim-handlebars'
+NeoBundle 'bling/vim-airline'
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
@@ -127,9 +139,9 @@ vnoremap <LocalLeader># "ay:Ack <C-r>a<CR>
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal! g`\"" |
+      \ endif
 
 " Remember info about open buffers on close
 set viminfo^=%
@@ -195,10 +207,6 @@ command! W w
 " Q also quits
 command! Q q
 
-" Commentary
-nnoremap // :TComment<CR>
-vnoremap // :TComment<CR>
-
 "key mapping for window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
@@ -251,11 +259,11 @@ let g:ctrlp_custom_ignore = {
       \ }
 
 let g:ctrlp_user_command = {
-    \ 'types': {
-    \ 1: ['.git', 'cd %s && git ls-files && git ls-files --others --exclude-standard | sort | uniq'],
-    \ },
-    \ 'fallback': 'find %s -type f'
-    \ }
+      \ 'types': {
+      \ 1: ['.git', 'cd %s && git ls-files && git ls-files --others --exclude-standard | sort | uniq'],
+      \ },
+      \ 'fallback': 'find %s -type f'
+      \ }
 
 map <C-b> :CtrlPBuffer<CR>
 ":map <C-p> :CtrlPMixed<CR>
@@ -312,13 +320,13 @@ au BufWrite * :call DeleteTrailingWS()
 
 " Rename Current File
 function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
-    endif
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
 map <leader>n :call RenameFile()<cr>
 
@@ -348,7 +356,7 @@ function! AdjustFontSize(amount)
       let newfont = fontname . newsize
       let &guifont = newfont
     endif
-:  else
+    :  else
     echoerr "You need to run the GTK2 version of Vim to use this function."
   endif
 endfunction
@@ -369,5 +377,22 @@ function! MapCR()
 endfunction
 call MapCR()
 
+" clean last search results
+nnoremap <leader>nh :noh<CR>
+
+" Fold by pressing space
+nnoremap <SPACE> za
+nnoremap <leader><SPACE> zA
+
 " Vimgutter
 highlight clear SignColumn
+
+" open vim-files
+fun! OpenVIMFiles()
+  exe "tabnew"
+  exe "lcd $HOME/.vim/"
+  exe "CtrlP"
+endf
+nnoremap <leader>vi :call OpenVIMFiles()<CR>
+
+NeoBundleCheck

@@ -69,6 +69,7 @@ NeoBundle 'rizzatti/dash.vim'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'bling/vim-airline'
+NeoBundle 'elixir-lang/vim-elixir'
 
 "store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
@@ -338,8 +339,11 @@ if has('gui_running')
   colorscheme solarized
   let g:airline_theme='solarized'
 else
-  set background=dark
-  colorscheme molokai
+  let g:solarized_termcolors=16
+  let g:solarized_visibility="high"
+  let g:solarized_contrast="high"
+  set background=light
+  colorscheme solarized
 endif
 
 " Change Font size

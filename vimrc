@@ -70,8 +70,11 @@ NeoBundle 'slim-template/vim-slim'
 NeoBundle 'nono/vim-handlebars'
 NeoBundle 'bling/vim-airline'
 NeoBundle 'elixir-lang/vim-elixir'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'jcf/vim-latex'
+NeoBundle 'jdonaldson/vaxe'
+NeoBundle 'Shougo/neocomplete'
 
-"store lots of :cmdline history
 set backupdir=~/.vim/backup,/tmp
 set directory=~/.vim/backup,/tmp
 set backupskip=/.vim/backup/*,/tmp
@@ -136,6 +139,19 @@ endif
 " Ack
 noremap <LocalLeader># "ayiw:Ack <C-r>a<CR>
 vnoremap <LocalLeader># "ay:Ack <C-r>a<CR>
+
+" Neocomplete
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#enable_cursor_hold_i = 1
+
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+      \ "\<Plug>(neosnippet_expand_or_jump)"
+      \ : pumvisible() ? "\<C-n>" : "\<TAB>"
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -288,6 +304,16 @@ let vimclojure#NailgunClient = "/usr/local/bin/ng"
 let g:html_indent_inctags = "html,body,head,tbody"
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
+
+" Vim-Latex
+let tex_flavor = 'latex'
+set grepprg=grep\ -nH\ $*
+set shellslash
+let g:Tex_DefaultTargetFormat = 'pdf'
+let g:Tex_CompileRule_dvi = 'platex --interaction=nonstopmode $*'
+let g:Tex_CompileRule_pdf = 'dvipdf $*.dvi'
+let g:Tex_FormatDependency_pdf = 'dvi,pdf'
+let g:Tex_ViewRule_pdf = 'Preview'
 
 " Le wildmenu
 set wildmenu

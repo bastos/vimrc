@@ -61,7 +61,6 @@ NeoBundle "majutsushi/tagbar"
 NeoBundle "szw/vim-tags"
 NeoBundle "scrooloose/syntastic"
 NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'gcmt/psearch.vim'
 NeoBundle "scrooloose/nerdtree"
 NeoBundle 'jistr/vim-nerdtree-tabs'
 NeoBundle 'rizzatti/funcoo.vim'
@@ -73,7 +72,6 @@ NeoBundle 'elixir-lang/vim-elixir'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'jcf/vim-latex'
 NeoBundle 'jdonaldson/vaxe'
-NeoBundle 'Shougo/neocomplete'
 
 set backupdir=~/.vim/backup,/tmp
 set directory=~/.vim/backup,/tmp
@@ -139,19 +137,6 @@ endif
 " Ack
 noremap <LocalLeader># "ayiw:Ack <C-r>a<CR>
 vnoremap <LocalLeader># "ay:Ack <C-r>a<CR>
-
-" Neocomplete
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#enable_cursor_hold_i = 1
-
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \ "\<Plug>(neosnippet_expand_or_jump)"
-      \ : pumvisible() ? "\<C-n>" : "\<TAB>"
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
@@ -264,9 +249,6 @@ let g:nerdtree_tabs_open_on_gui_startup = 0
 map <leader>nn :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark
 map <leader>nf :NERDTreeFind<cr>
-
-" PSearch
-map <leader>f :PSearch
 
 " CtrlP
 let g:ctrlp_custom_ignore = {
